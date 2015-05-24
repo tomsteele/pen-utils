@@ -1,4 +1,4 @@
-/*server-banner takes a url and returns the server header.*/
+/*sort-ip sorts a newline delimited file by finding the left most ipv4 address*/
 package main
 
 import (
