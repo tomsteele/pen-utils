@@ -19,6 +19,7 @@ func checkError(err error) {
 func main() {
 	var file *os.File
 	var err error
+	pUp := flag.Bool("p", false, "host must have at least one port to be alive")
 	flag.Parse()
 	if len(flag.Args()) >= 1 {
 		file, err = os.Open(flag.Arg(0))
@@ -33,6 +34,15 @@ func main() {
 
 	for _, h := range n.Hosts {
 		if h.Status.State == "up" {
+			if *pUp {
+				for _, p := range h.Ports {
+					if p.State.State == "open" {
+						fmt.Println(h.Address[0].Addr)
+						break
+					}
+				}
+				continue
+			}
 			fmt.Println(h.Address[0].Addr)
 		}
 	}
