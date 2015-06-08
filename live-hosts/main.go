@@ -37,13 +37,13 @@ func main() {
 			if *pUp {
 				for _, p := range h.Ports {
 					if p.State.State == "open" {
-						fmt.Println(h.Address[0].Addr)
+						fmt.Println(h.Addresses[0].Addr)
 						break
 					}
 				}
 				continue
 			}
-			fmt.Println(h.Address[0].Addr)
+			fmt.Println(h.Addresses[0].Addr)
 		}
 	}
 }
