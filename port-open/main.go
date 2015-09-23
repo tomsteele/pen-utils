@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/lair-framework/go-nmap"
@@ -53,11 +54,11 @@ func main() {
 
 	for _, h := range n.Hosts {
 		if h.Status.State == "up" {
-			ip := h.Address[0].Addr
+			ip := h.Addresses[0].Addr
 			for _, p := range h.Ports {
 				sm, serr := regexp.MatchString(*service, p.Service.Name)
 				pm, perr := regexp.MatchString(*product, p.Service.Product)
-				if (sm && serr == nil) && (pm && perr == nil) && (*port == "-1" || stringInSlice(p.PortId, ports)) && p.State.State == "open" {
+				if (sm && serr == nil) && (pm && perr == nil) && (*port == "-1" || stringInSlice(strconv.Itoa(p.PortId), ports)) && p.State.State == "open" {
 					fmt.Printf(*format, ip, p.PortId)
 					fmt.Println()
 				}
