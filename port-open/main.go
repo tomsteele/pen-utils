@@ -33,7 +33,7 @@ func main() {
 	var file *os.File
 	var err error
 
-	format := flag.String("f", "%s:%s", "ip and port format string")
+	format := flag.String("f", "%s:%d", "ip and port format string")
 	port := flag.String("p", "80", "comma delimited port to search for, can be '-1' to match all ports")
 	service := flag.String("s", ".*", "service regex to search for ex: http")
 	product := flag.String("pr", ".*", "product regex to search for ex: Apache")
