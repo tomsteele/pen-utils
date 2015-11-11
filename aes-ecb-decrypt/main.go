@@ -13,7 +13,7 @@ import (
 )
 
 func aesDecrypt(key, data []byte) ([]byte, error) {
-	plain := make([]byte, len(data))
+	plain := []byte{}
 
 	a, err := aes.NewCipher(key)
 	if err != nil {
