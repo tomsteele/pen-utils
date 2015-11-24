@@ -108,7 +108,7 @@ func bingAPI(domain, key string) ([]string, error) {
 
 func main() {
 
-	domain := flag.String("d", "", "domain to search for")
+	domain := flag.String("d", "", "domain to search for. can be anything really.")
 	apiKey := flag.String("k", "", "optional bing api key")
 	flag.Parse()
 
