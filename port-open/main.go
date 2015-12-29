@@ -59,7 +59,7 @@ func main() {
 				sm, serr := regexp.MatchString(*service, p.Service.Name)
 				pm, perr := regexp.MatchString(*product, p.Service.Product)
 				if (sm && serr == nil) && (pm && perr == nil) && (*port == "-1" || stringInSlice(strconv.Itoa(p.PortId), ports)) && p.State.State == "open" {
-					fmt.Printf(*format, ip, strconv.Itoa(p.PortId))
+					fmt.Printf(*format, ip, p.PortId)
 					fmt.Println()
 				}
 			}
