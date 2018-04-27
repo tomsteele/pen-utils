@@ -8,12 +8,12 @@ import (
 	"regexp"
 )
 
-var (
-	lower  = regexp.MustCompile(`[a-z]`)
-	upper  = regexp.MustCompile(`[A-Z]`)
-	number = regexp.MustCompile(`[0-9]`)
-	marks  = regexp.MustCompile(`[^0-9a-zA-Z]`)
-)
+var matches = []*regexp.Regexp{
+	regexp.MustCompile(`[a-z]`),
+	regexp.MustCompile(`[A-Z]`),
+	regexp.MustCompile(`[0-9]`),
+	regexp.MustCompile(`[^0-9a-zA-Z]`),
+}
 
 func checkError(err error) {
 	if err != nil {
@@ -23,26 +23,13 @@ func checkError(err error) {
 }
 
 func isComplex(p string) bool {
-
-	if len(p) < 8 {
-		return false
-	}
-
 	var typ int
-
-	if lower.MatchString(p) {
-		typ++
+	for _, m := range matches {
+		if m.MatchString(p) {
+			typ++
+		}
 	}
-	if upper.MatchString(p) {
-		typ++
-	}
-	if number.MatchString(p) {
-		typ++
-	}
-	if marks.MatchString(p) {
-		typ++
-	}
-	return typ > 2
+	return typ > 2 && len(p) >= 8
 }
 
 
