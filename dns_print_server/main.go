@@ -15,6 +15,7 @@ func checkErr(err error) {
 
 func main() {
 	dns.HandleFunc(".", func(w dns.ResponseWriter, req *dns.Msg) {
+		log.Printf("ID %d id\n", req.Id)
 		for _, q := range req.Question {
 			fmt.Println(q.Name)
 		}

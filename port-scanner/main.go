@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 // explodePorts takes a portstring similar to nmap and returns an array of ports.
@@ -91,7 +92,7 @@ func main() {
 			// port is a channel, by calling range this goroutine will wait for a port
 			// to be sent over the channel.
 			for p := range port {
-				if conn, err := net.Dial("tcp", host+":"+strconv.Itoa(p)); err == nil {
+				if conn, err := net.DialTimeout("tcp", host+":"+strconv.Itoa(p), 500*time.Millisecond); err == nil {
 					fmt.Printf("%d open\n", p)
 					conn.Close()
 				}
